@@ -227,32 +227,44 @@ function centsOff(detected, target) {
 }
 
 function autoCorrelate(buf) {
+  // RMS — umbral bajo para captar cuerdas graves
   let rms = 0;
   for (let i = 0; i < buf.length; i++) rms += buf[i] * buf[i];
   rms = Math.sqrt(rms / buf.length);
-  if (rms < 0.01) return -1;
+  if (rms < 0.003) return -1;
 
-  let r1 = 0, r2 = buf.length - 1, thresh = 0.2;
+  // Buscar cruces por cero para recortar el buffer
+  let r1 = 0, r2 = buf.length - 1;
+  const thresh = 0.1;
   for (let i = 0; i < buf.length / 2; i++) { if (Math.abs(buf[i]) < thresh) { r1 = i; break; } }
   for (let i = 1; i < buf.length / 2; i++) { if (Math.abs(buf[buf.length / 2 - i]) < thresh) { r2 = buf.length / 2 - i; break; } }
 
   const slice = buf.slice(r1, r2);
   const m = slice.length;
+  if (m < 10) return -1;
+
+  // Autocorrelación
   const corr = new Float32Array(m);
   for (let i = 0; i < m; i++) for (let j = 0; j < m - i; j++) corr[i] += slice[j] * slice[j + i];
 
-  let pd = false, best = -1;
-  for (let i = 1; i < m; i++) {
-    if (!pd && corr[i - 1] < 0) pd = true;
-    if (pd && corr[i] > corr[best]) best = i;
-    if (pd && corr[i] < corr[best] * 0.98) break;
+  // Buscar primer valle y luego el pico máximo
+  let i = 1;
+  while (i < m && corr[i] > corr[i - 1]) i++;  // bajar hasta el primer valle
+  let best = i, maxVal = -Infinity;
+  // Rango de lag para guitarra: 82 Hz → lag=537, 330 Hz → lag=134 (a 44100 Hz)
+  const lagMin = Math.floor(SAMPLE_RATE / 340);
+  const lagMax = Math.floor(SAMPLE_RATE / 70);
+  for (let k = lagMin; k < Math.min(lagMax, m); k++) {
+    if (corr[k] > maxVal) { maxVal = corr[k]; best = k; }
   }
-  if (!pd || best === -1) return -1;
+  if (maxVal < corr[0] * 0.35) return -1;  // correlación débil → descartar
 
+  // Interpolación parabólica para mayor precisión
   const x0 = best > 0 ? corr[best - 1] : 0;
   const x1 = corr[best];
   const x2 = best < m - 1 ? corr[best + 1] : 0;
-  const adj = best + (x2 - x0) / (2 * (2 * x1 - x2 - x0)) || best;
+  const denom = 2 * (2 * x1 - x2 - x0);
+  const adj = denom !== 0 ? best + (x2 - x0) / denom : best;
   return SAMPLE_RATE / adj;
 }
 
@@ -412,7 +424,7 @@ async function toggleMic() {
     audioCtx = new AudioContext({ sampleRate: SAMPLE_RATE });
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = FFT_SIZE;
-    analyser.smoothingTimeConstant = 0.5;
+    analyser.smoothingTimeConstant = 0.2;
     gainNode = audioCtx.createGain();
     gainNode.gain.value = muted ? 0 : 0;  // no playback, solo análisis
     const src = audioCtx.createMediaStreamSource(micStream);
