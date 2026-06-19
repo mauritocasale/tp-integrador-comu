@@ -1,404 +1,202 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Afinador de Guitarra — Comunicación de Datos 2025</title>
-
 <style>
-
     /* (Se mantiene tu CSS original intacto) */
-
     *{box-sizing:border-box;margin:0;padding:0}
-
     :root{--bg:#1a1a2e;--bg2:#16213e;--card:#1e2a45;--green:#4caf50;--yellow:#ffc107;--red:#f44336;--blue:#2196f3;--text:#ffffff;--muted:#8892a4;--border:#2d3f5e}
-
     body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;display:flex;justify-content:center}
-
     .app{width:100%;max-width:400px;padding:1.5rem 1rem 2rem}
-
     .header{text-align:center;margin-bottom:1.2rem}
-
     .header h1{font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:.5rem}
-
     .gauge-wrap{background:var(--card);border-radius:16px;padding:1.2rem 1rem .8rem;margin-bottom:.8rem}
-
     .gauge-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:.4rem;padding:0 .5rem}
-
     .gauge-track{position:relative;height:60px}
-
     .gauge-line{position:absolute;top:50%;left:8%;right:8%;height:2px;background:linear-gradient(90deg,#1565c0 0%,#1976d2 40%,#4caf50 47%,#4caf50 53%,#e53935 60%,#b71c1c 100%);border-radius:2px;transform:translateY(-50%)}
-
     .gauge-center{position:absolute;top:15%;left:50%;width:2px;height:70%;background:rgba(255,255,255,.12);transform:translateX(-50%)}
-
     .needle-wrap{position:absolute;top:50%;left:50%;transform:translateX(-50%);transform-origin:50% 100%;transition:transform .1s ease}
-
     .needle{width:2px;height:46px;background:var(--red);border-radius:2px 2px 0 0;margin:0 auto;transform:translateY(-100%)}
-
     .needle-dot{width:12px;height:12px;border-radius:50%;background:var(--red);margin:0 auto;margin-top:-1px}
-
     .note-display{text-align:center;padding:.4rem 0 .6rem}
-
     .note-row{display:flex;align-items:baseline;justify-content:center;gap:.4rem}
-
     .note-big{font-size:58px;font-weight:700;line-height:1}
-
     .note-arrow{font-size:20px;color:var(--muted)}
-
     .note-target{font-size:24px;font-weight:500;color:var(--muted)}
-
     .status-txt{font-size:15px;font-weight:500;margin:.25rem 0}
-
     .freq-txt{font-size:13px;color:var(--muted)}
-
     .spec-wrap{margin-bottom:.8rem}
-
     .spec-lbl{font-size:11px;color:var(--muted);margin-bottom:3px}
-
     canvas{display:block;width:100%;border-radius:8px;background:var(--bg2)}
-
     .str-label{font-size:12px;color:var(--muted);margin:.6rem 0 .4rem}
-
     .str-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.9rem}
-
     .str-btn{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.55rem .3rem;text-align:center;cursor:pointer;transition:background .15s,border .15s;color:var(--text);font-family:inherit}
-
     .str-btn.active{background:var(--green);border-color:var(--green)}
-
     .str-name{display:block;font-size:19px;font-weight:600}
-
     .str-sub{display:block;font-size:11px;color:var(--muted);margin-top:2px}
-
     .controls{display:flex;justify-content:center;gap:1rem;margin-bottom:1rem}
-
     .btn-round{width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .15s}
-
     .btn-mic{background:var(--red);color:#fff}
-
     .btn-mic.on{background:#2e7d32;color:#fff}
-
     .btn-vol{background:var(--card);border:1px solid var(--border);color:var(--text)}
-
     .btn-vol.muted{color:var(--muted)}
-
     .tx-panel{background:var(--card);border-radius:16px;padding:1rem}
-
     .tx-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
-
     .tx-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-
     .tx-tog{font-size:11px;color:var(--muted)}
-
     .tx-body{display:none;margin-top:.8rem}
-
     .tx-body.open{display:block}
-
     .tx-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;gap:.5rem}
-
     .tx-lbl{font-size:12px;color:var(--muted);white-space:nowrap}
-
     select{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:4px 8px;font-size:12px;font-family:inherit}
-
     input[type=range]{flex:1;accent-color:var(--green);margin:0 6px}
-
     .tx-val{font-size:12px;min-width:30px;text-align:right}
-
     .tx-vis-lbl{font-size:11px;color:var(--muted);margin:.5rem 0 3px}
-
     .tx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:.7rem}
-
     .tx-stat{background:var(--bg2);border-radius:8px;padding:.4rem .3rem;text-align:center}
-
     .tx-stat-v{font-size:13px;font-weight:600;color:var(--green)}
-
     .tx-stat-l{font-size:10px;color:var(--muted);margin-top:2px}
-
     .info{font-size:11px;color:#4a5568;text-align:center;margin-top:.8rem;line-height:1.6}
-
 </style>
-
 </head>
-
 <body>
-
 <div class="app">
-
     <div class="header"><h1>🎸 Afinador de Guitarra</h1></div>
-
     <div class="gauge-wrap">
-
         <div class="gauge-labels"><span>↓ Bajo</span><span>Alto ♯</span></div>
-
         <div class="gauge-track">
-
             <div class="gauge-line"></div>
-
             <div class="gauge-center"></div>
-
             <div class="needle-wrap" id="needle"><div class="needle"></div><div class="needle-dot"></div></div>
-
         </div>
-
     </div>
-
     <div class="note-display">
-
         <div class="note-row"><span class="note-big" id="noteBig">—</span><span class="note-arrow">→</span><span class="note-target" id="noteTarget">—</span></div>
-
         <div class="status-txt" id="statusTxt" style="color:var(--muted)">Presioná el micrófono</div>
-
         <div class="freq-txt" id="freqTxt">— Hz</div>
-
     </div>
-
     <div class="spec-wrap"><div class="spec-lbl">Espectro FFT</div><canvas id="specCanvas" height="52"></canvas></div>
-
     <div class="str-label">Selecciona una cuerda:</div>
-
     <div class="str-grid" id="strGrid"></div>
-
     <div class="controls">
-
         <button class="btn-round btn-mic" id="micBtn" onclick="toggleMic()">🎤</button>
-
         <button class="btn-round btn-vol" id="volBtn" onclick="toggleMute()">🔊</button>
-
     </div>
-
     <div class="tx-panel">
-
         <div class="tx-head" onclick="toggleTx()">
-
             <span class="tx-title">📡 Transmisión Digital</span>
-
             <span class="tx-tog" id="txTog">▼ ver</span>
-
         </div>
-
         <div class="tx-body" id="txBody">
-
             <div class="tx-row">
-
                 <span class="tx-lbl">Codificación</span>
-
                 <select id="codecSel" onchange="updateTx()"><option value="pcm">PCM</option><option value="adpcm">ADPCM</option></select>
-
             </div>
-
             <div class="tx-row">
-
                 <span class="tx-lbl">Error</span>
-
                 <input type="range" id="errRange" min="0" max="30" value="0" oninput="updateTx()">
-
                 <span class="tx-val" id="errVal">0%</span>
-
             </div>
-
             <div class="tx-row">
-
                 <span class="tx-lbl">Bits</span>
-
                 <select id="bitsSel" onchange="updateTx()"><option value="8">8 bits</option><option value="16" selected>16 bits</option></select>
-
             </div>
-
             <div class="tx-vis-lbl">Señal TX (transmitida)</div>
-
             <canvas id="txCanvas" height="52"></canvas>
-
             <div class="tx-vis-lbl">Señal RX (reconstruida)</div>
-
             <canvas id="rxCanvas" height="52"></canvas>
-
             <div class="tx-stats">
-
                 <div class="tx-stat"><div class="tx-stat-v" id="statBR">0</div><div class="tx-stat-l">kbps</div></div>
-
                 <div class="tx-stat"><div class="tx-stat-v" id="statSNR">∞</div><div class="tx-stat-l">SNR</div></div>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 <script>
-
     const STRINGS = [
-
         { name:'E', freq:82.41 }, { name:'A', freq:110.00 }, { name:'D', freq:146.83 },
-
         { name:'G', freq:196.00 }, { name:'B', freq:246.94 }, { name:'E', freq:329.63 }
-
     ];
-
     let selIdx = 4, micActive = false, txOpen = false, audioCtx, analyser, rafId, lastTimeBuf = new Float32Array(4096);
 
-
-
     function buildStrings() {
-
         const grid = document.getElementById('strGrid');
-
         STRINGS.forEach((s, i) => {
-
             const btn = document.createElement('button');
-
             btn.className = 'str-btn' + (i === selIdx ? ' active' : '');
-
             btn.innerHTML = `<span class="str-name">${s.name}</span>`;
-
             btn.onclick = () => { selIdx = i; document.querySelectorAll('.str-btn').forEach((b, j) => b.className = j === i ? 'str-btn active' : 'str-btn'); };
-
             grid.appendChild(btn);
-
         });
-
     }
-
-
 
     function autoCorrelate(buf) {
-
         let rms = 0;
-
         for (let i = 0; i < buf.length; i++) rms += buf[i] * buf[i];
-
         if (Math.sqrt(rms / buf.length) < 0.005) return -1;
-
         const corr = new Float32Array(buf.length);
-
         for (let i = 0; i < buf.length; i++) for (let j = 0; j < buf.length - i; j++) corr[i] += buf[j] * buf[j + i];
-
         let best = -1;
-
         for (let i = 100; i < buf.length / 2; i++) if (corr[i] > (best === -1 ? 0 : corr[best])) best = i;
-
         return best > 0 ? 44100 / best : -1;
-
     }
-
-
 
     function renderTx(timeBuf) {
-
         const err = parseInt(document.getElementById('errRange').value) / 100;
-
         const bits = parseInt(document.getElementById('bitsSel').value);
-
         const n = 200;
-
         const ctxTx = document.getElementById('txCanvas').getContext('2d');
-
         const ctxRx = document.getElementById('rxCanvas').getContext('2d');
-
         [ctxTx, ctxRx].forEach(c => c.clearRect(0, 0, 400, 52));
-
         
-
         ctxTx.strokeStyle = '#4caf50'; ctxRx.strokeStyle = '#64b5f6';
-
         ctxTx.beginPath(); ctxRx.beginPath();
-
         for(let i=0; i<n; i++){
-
             let v = timeBuf[i];
-
             let q = Math.round(v * (Math.pow(2, bits)/2)) / (Math.pow(2, bits)/2);
-
             let rx = (Math.random() < err) ? q + (Math.random()-0.5)*0.5 : q;
-
             ctxTx.lineTo(i*2, 26 - q*26);
-
             ctxRx.lineTo(i*2, 26 - rx*26);
-
         }
-
         ctxTx.stroke(); ctxRx.stroke();
-
         document.getElementById('statBR').textContent = (bits * 44.1).toFixed(0);
-
     }
-
-
 
     function loop() {
-
         const tBuf = new Float32Array(4096);
-
         function tick() {
-
             analyser.getFloatTimeDomainData(tBuf);
-
             lastTimeBuf = tBuf.slice();
-
             const freq = autoCorrelate(tBuf);
-
             if (freq > 60 && freq < 1400) {
-
                 const cents = 1200 * Math.log2(freq / STRINGS[selIdx].freq);
-
                 document.getElementById('needle').style.transform = `translateX(-50%) rotate(${Math.max(-50, Math.min(50, cents))}deg)`;
-
                 document.getElementById('noteBig').textContent = STRINGS[selIdx].name;
-
                 document.getElementById('freqTxt').textContent = freq.toFixed(1) + ' Hz';
-
             }
-
             if(txOpen) renderTx(lastTimeBuf);
-
             rafId = requestAnimationFrame(tick);
-
         }
-
         tick();
-
     }
-
-
 
     async function toggleMic() {
-
         if(micActive) window.location.reload();
-
         const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-
         audioCtx = new AudioContext();
-
         analyser = audioCtx.createAnalyser();
-
         audioCtx.createMediaStreamSource(stream).connect(analyser);
-
         micActive = true;
-
         document.getElementById('micBtn').className = 'btn-round btn-mic on';
-
         loop();
-
     }
 
-
-
     function toggleTx() { txOpen = !txOpen; document.getElementById('txBody').className = txOpen ? 'tx-body open' : 'tx-body'; }
-
     function updateTx() { document.getElementById('errVal').textContent = document.getElementById('errRange').value + '%'; if(txOpen) renderTx(lastTimeBuf); }
-
     function toggleMute() { /* placeholder */ }
-
     buildStrings();
-
 </script>
-
 </body>
-
-</html> 
-
+</html>
