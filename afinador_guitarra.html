@@ -9,22 +9,16 @@
 :root{--bg:#1a1a2e;--bg2:#16213e;--card:#1e2a45;--green:#4caf50;--yellow:#ffc107;--red:#f44336;--blue:#2196f3;--text:#ffffff;--muted:#8892a4;--border:#2d3f5e}
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;display:flex;justify-content:center}
 .app{width:100%;max-width:400px;padding:1.5rem 1rem 2rem}
-
-/* Header */
 .header{text-align:center;margin-bottom:1.2rem}
 .header h1{font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:.5rem}
-
-/* Gauge */
 .gauge-wrap{background:var(--card);border-radius:16px;padding:1.2rem 1rem .8rem;margin-bottom:.8rem}
 .gauge-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:.4rem;padding:0 .5rem}
 .gauge-track{position:relative;height:60px}
 .gauge-line{position:absolute;top:50%;left:8%;right:8%;height:2px;background:linear-gradient(90deg,#1565c0 0%,#1976d2 40%,#4caf50 47%,#4caf50 53%,#e53935 60%,#b71c1c 100%);border-radius:2px;transform:translateY(-50%)}
 .gauge-center{position:absolute;top:15%;left:50%;width:2px;height:70%;background:rgba(255,255,255,.12);transform:translateX(-50%)}
-.needle-wrap{position:absolute;top:50%;left:50%;transform:translateX(-50%);transform-origin:50% 100%;transition:transform .1s ease}
+.needle-wrap{position:absolute;top:50%;left:50%;transform:translateX(-50%);transform-origin:50% 100%;transition:transform .08s ease-out}
 .needle{width:2px;height:46px;background:var(--red);border-radius:2px 2px 0 0;margin:0 auto;transform:translateY(-100%)}
 .needle-dot{width:12px;height:12px;border-radius:50%;background:var(--red);margin:0 auto;margin-top:-1px}
-
-/* Note */
 .note-display{text-align:center;padding:.4rem 0 .6rem}
 .note-row{display:flex;align-items:baseline;justify-content:center;gap:.4rem}
 .note-big{font-size:58px;font-weight:700;line-height:1}
@@ -32,420 +26,128 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-se
 .note-target{font-size:24px;font-weight:500;color:var(--muted)}
 .status-txt{font-size:15px;font-weight:500;margin:.25rem 0}
 .freq-txt{font-size:13px;color:var(--muted)}
-
-/* Spectrum */
 .spec-wrap{margin-bottom:.8rem}
 .spec-lbl{font-size:11px;color:var(--muted);margin-bottom:3px}
 canvas{display:block;width:100%;border-radius:8px;background:var(--bg2)}
-
-/* Strings */
 .str-label{font-size:12px;color:var(--muted);margin:.6rem 0 .4rem}
 .str-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.9rem}
 .str-btn{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.55rem .3rem;text-align:center;cursor:pointer;transition:background .15s,border .15s;color:var(--text);font-family:inherit}
-.str-btn:hover{background:#243050}
 .str-btn.active{background:var(--green);border-color:var(--green)}
-.str-btn.active .str-sub{color:rgba(255,255,255,.75)}
 .str-name{display:block;font-size:19px;font-weight:600}
 .str-sub{display:block;font-size:11px;color:var(--muted);margin-top:2px}
-
-/* Controls */
 .controls{display:flex;justify-content:center;gap:1rem;margin-bottom:1rem}
-.btn-round{width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .15s}
+.btn-round{width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;font-size:22px}
 .btn-mic{background:var(--red);color:#fff}
 .btn-mic.on{background:#2e7d32;color:#fff}
 .btn-vol{background:var(--card);border:1px solid var(--border);color:var(--text)}
-.btn-vol.muted{color:var(--muted)}
-
-/* TX Panel */
 .tx-panel{background:var(--card);border-radius:16px;padding:1rem}
-.tx-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
-.tx-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-.tx-tog{font-size:11px;color:var(--muted)}
+.tx-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
 .tx-body{display:none;margin-top:.8rem}
 .tx-body.open{display:block}
 .tx-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;gap:.5rem}
-.tx-lbl{font-size:12px;color:var(--muted);white-space:nowrap}
-select{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:4px 8px;font-size:12px;font-family:inherit}
-input[type=range]{flex:1;accent-color:var(--green);margin:0 6px}
-.tx-val{font-size:12px;min-width:30px;text-align:right}
+.tx-lbl{font-size:12px;color:var(--muted)}
+select{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:4px 8px}
+input[type=range]{flex:1;accent-color:var(--green)}
 .tx-vis-lbl{font-size:11px;color:var(--muted);margin:.5rem 0 3px}
 .tx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:.7rem}
 .tx-stat{background:var(--bg2);border-radius:8px;padding:.4rem .3rem;text-align:center}
 .tx-stat-v{font-size:13px;font-weight:600;color:var(--green)}
-.tx-stat-l{font-size:10px;color:var(--muted);margin-top:2px}
-
-/* Info footer */
-.info{font-size:11px;color:#4a5568;text-align:center;margin-top:.8rem;line-height:1.6}
+.info{font-size:11px;color:#4a5568;text-align:center;margin-top:.8rem}
 </style>
 </head>
 <body>
 <div class="app">
-
-  <div class="header">
-    <h1>🎸 Afinador de Guitarra</h1>
-  </div>
-
+  <div class="header"><h1>🎸 Afinador de Guitarra</h1></div>
   <div class="gauge-wrap">
     <div class="gauge-labels"><span>↓ Bajo</span><span>Alto ♯</span></div>
     <div class="gauge-track">
-      <div class="gauge-line"></div>
-      <div class="gauge-center"></div>
-      <div class="needle-wrap" id="needle">
-        <div class="needle"></div>
-        <div class="needle-dot"></div>
-      </div>
+      <div class="gauge-line"></div><div class="gauge-center"></div>
+      <div class="needle-wrap" id="needle"><div class="needle"></div><div class="needle-dot"></div></div>
     </div>
   </div>
-
   <div class="note-display">
-    <div class="note-row">
-      <span class="note-big" id="noteBig">—</span>
-      <span class="note-arrow">→</span>
-      <span class="note-target" id="noteTarget">—</span>
-    </div>
-    <div class="status-txt" id="statusTxt" style="color:var(--muted)">Presioná el micrófono</div>
+    <div class="note-row"><span class="note-big" id="noteBig">—</span><span class="note-arrow">→</span><span class="note-target" id="noteTarget">—</span></div>
+    <div class="status-txt" id="statusTxt">Presioná el micrófono</div>
     <div class="freq-txt" id="freqTxt">— Hz</div>
   </div>
-
-  <div class="spec-wrap">
-    <div class="spec-lbl">Espectro FFT (0–1400 Hz)</div>
-    <canvas id="specCanvas" height="52"></canvas>
-  </div>
-
+  <div class="spec-wrap"><div class="spec-lbl">Espectro FFT</div><canvas id="specCanvas" height="52"></canvas></div>
   <div class="str-label">Selecciona una cuerda:</div>
   <div class="str-grid" id="strGrid"></div>
-
   <div class="controls">
-    <button class="btn-round btn-mic" id="micBtn" onclick="toggleMic()" title="Micrófono">🎤</button>
-    <button class="btn-round btn-vol" id="volBtn" onclick="toggleMute()" title="Silenciar">🔊</button>
+    <button class="btn-round btn-mic" id="micBtn" onclick="toggleMic()">🎤</button>
   </div>
-
-  <!-- PROPUESTA 4: Transmisión Digital -->
   <div class="tx-panel">
     <div class="tx-head" onclick="toggleTx()">
-      <span class="tx-title">📡 Transmisión Digital</span>
-      <span class="tx-tog" id="txTog">▼ ver</span>
+      <span class="tx-title">📡 Transmisión Digital</span><span id="txTog">▼ ver</span>
     </div>
     <div class="tx-body" id="txBody">
-
-      <div class="tx-row">
-        <span class="tx-lbl">Codificación</span>
-        <select id="codecSel" onchange="updateTx()">
-          <option value="pcm">PCM (sin comprimir)</option>
-          <option value="adpcm">ADPCM (25%)</option>
-          <option value="mp3">MP3 simulado (10%)</option>
-        </select>
-      </div>
-
-      <div class="tx-row">
-        <span class="tx-lbl">Error de canal</span>
-        <input type="range" id="errRange" min="0" max="30" value="0" step="1" oninput="updateTx()">
-        <span class="tx-val" id="errVal">0%</span>
-      </div>
-
-      <div class="tx-row">
-        <span class="tx-lbl">Bits / muestra</span>
-        <select id="bitsSel" onchange="updateTx()">
-          <option value="8">8 bits</option>
-          <option value="16" selected>16 bits</option>
-          <option value="24">24 bits</option>
-        </select>
-      </div>
-
-      <div class="tx-vis-lbl">Señal TX (transmitida)</div>
-      <canvas id="txCanvas" height="52"></canvas>
-
-      <div class="tx-vis-lbl">Señal RX (reconstruida en receptor)</div>
-      <canvas id="rxCanvas" height="52"></canvas>
-
-      <div class="tx-stats">
-        <div class="tx-stat"><div class="tx-stat-v" id="statSR">44100</div><div class="tx-stat-l">Hz muestreo</div></div>
-        <div class="tx-stat"><div class="tx-stat-v" id="statBR">706</div><div class="tx-stat-l">kbps</div></div>
-        <div class="tx-stat"><div class="tx-stat-v" id="statSNR">∞</div><div class="tx-stat-l">SNR (dB)</div></div>
-      </div>
+        <select id="codecSel" onchange="updateTx()"><option value="pcm">PCM</option><option value="adpcm">ADPCM</option></select>
+        <div class="tx-row"><span class="tx-lbl">Error</span><input type="range" id="errRange" min="0" max="30" value="0" oninput="updateTx()"><span id="errVal">0%</span></div>
+        <canvas id="txCanvas" height="52"></canvas>
+        <canvas id="rxCanvas" height="52"></canvas>
     </div>
   </div>
-
-  <div class="info">
-    Propuestas 2 y 4 — Comunicación de Datos UTN La Plata 2025<br>
-    SR: 44100 Hz · FFT: 4096 puntos · Web Audio API + Canvas API
-  </div>
-
 </div>
-
 <script>
-// ── CONSTANTES ──────────────────────────────────────────────────
 const STRINGS = [
-  { name:'E', label:'6 (E grave)', freq:82.41 },
-  { name:'A', label:'5 (A)',       freq:110.00 },
-  { name:'D', label:'4 (D)',       freq:146.83 },
-  { name:'G', label:'3 (G)',       freq:196.00 },
-  { name:'B', label:'2 (B)',       freq:246.94 },
-  { name:'E', label:'1 (E agudo)', freq:329.63 }
+  { name:'E', freq:82.41 }, { name:'A', freq:110.00 }, { name:'D', freq:146.83 },
+  { name:'G', freq:196.00 }, { name:'B', freq:246.94 }, { name:'E', freq:329.63 }
 ];
-const FFT_SIZE = 4096;
-const SAMPLE_RATE = 44100;
+const FFT_SIZE = 4096, SAMPLE_RATE = 44100;
+let selIdx = 4, micActive = false, txOpen = false, audioCtx, analyser, rafId, lastTimeBuf = new Float32Array(FFT_SIZE);
 
-// ── ESTADO ──────────────────────────────────────────────────────
-let selIdx = 4;
-let micActive = false;
-let muted = false;
-let txOpen = false;
-let audioCtx, analyser, micStream, gainNode, rafId;
-let lastTimeBuf = new Float32Array(FFT_SIZE);
-
-// ── BUILD STRINGS GRID ──────────────────────────────────────────
 function buildStrings() {
   const grid = document.getElementById('strGrid');
   STRINGS.forEach((s, i) => {
     const btn = document.createElement('button');
     btn.className = 'str-btn' + (i === selIdx ? ' active' : '');
-    btn.id = 'sb' + i;
-    btn.innerHTML = `<span class="str-name">${s.name}</span><span class="str-sub">${s.label}</span>`;
-    btn.onclick = () => selectString(i);
+    btn.innerHTML = `<span class="str-name">${s.name}</span>`;
+    btn.onclick = () => { selIdx = i; document.querySelectorAll('.str-btn').forEach((b, idx) => b.className = idx === i ? 'str-btn active' : 'str-btn'); };
     grid.appendChild(btn);
   });
 }
 
-function selectString(i) {
-  selIdx = i;
-  STRINGS.forEach((_, j) => {
-    document.getElementById('sb' + j).className = 'str-btn' + (j === i ? ' active' : '');
-  });
-}
-
-// ── PITCH DETECTION ─────────────────────────────────────────────
-function noteFromFreq(f) {
-  const A4 = 440;
-  const notes = ['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'];
-  const n = Math.round(12 * Math.log2(f / A4));
-  return notes[((n % 12) + 12) % 12] + (Math.floor(n / 12) + 4);
-}
-
-function centsOff(detected, target) {
-  return 1200 * Math.log2(detected / target);
-}
-
 function autoCorrelate(buf) {
-  // RMS — umbral bajo para captar cuerdas graves
   let rms = 0;
   for (let i = 0; i < buf.length; i++) rms += buf[i] * buf[i];
-  rms = Math.sqrt(rms / buf.length);
-  if (rms < 0.003) return -1;
-
-  // Buscar cruces por cero para recortar el buffer
-  let r1 = 0, r2 = buf.length - 1;
-  const thresh = 0.1;
-  for (let i = 0; i < buf.length / 2; i++) { if (Math.abs(buf[i]) < thresh) { r1 = i; break; } }
-  for (let i = 1; i < buf.length / 2; i++) { if (Math.abs(buf[buf.length / 2 - i]) < thresh) { r2 = buf.length / 2 - i; break; } }
-
-  const slice = buf.slice(r1, r2);
-  const m = slice.length;
-  if (m < 10) return -1;
-
-  // Autocorrelación
-  const corr = new Float32Array(m);
-  for (let i = 0; i < m; i++) for (let j = 0; j < m - i; j++) corr[i] += slice[j] * slice[j + i];
-
-  // Buscar primer valle y luego el pico máximo
-  let i = 1;
-  while (i < m && corr[i] > corr[i - 1]) i++;  // bajar hasta el primer valle
-  let best = i, maxVal = -Infinity;
-  // Rango de lag para guitarra: 82 Hz → lag=537, 330 Hz → lag=134 (a 44100 Hz)
-  const lagMin = Math.floor(SAMPLE_RATE / 340);
-  const lagMax = Math.floor(SAMPLE_RATE / 70);
-  for (let k = lagMin; k < Math.min(lagMax, m); k++) {
-    if (corr[k] > maxVal) { maxVal = corr[k]; best = k; }
-  }
-  if (maxVal < corr[0] * 0.35) return -1;  // correlación débil → descartar
-
-  // Interpolación parabólica para mayor precisión
-  const x0 = best > 0 ? corr[best - 1] : 0;
-  const x1 = corr[best];
-  const x2 = best < m - 1 ? corr[best + 1] : 0;
-  const denom = 2 * (2 * x1 - x2 - x0);
-  const adj = denom !== 0 ? best + (x2 - x0) / denom : best;
-  return SAMPLE_RATE / adj;
+  if (Math.sqrt(rms / buf.length) < 0.001) return -1;
+  const corr = new Float32Array(buf.length);
+  for (let i = 0; i < buf.length; i++) for (let j = 0; j < buf.length - i; j++) corr[i] += buf[j] * buf[j + i];
+  let best = 0;
+  for (let k = 100; k < 1000; k++) if (corr[k] > corr[best]) best = k;
+  return SAMPLE_RATE / best;
 }
 
-// ── SPECTRUM ────────────────────────────────────────────────────
-function drawSpectrum(fData) {
-  const cv = document.getElementById('specCanvas');
-  const W = cv.offsetWidth || 360;
-  const dpr = window.devicePixelRatio || 1;
-  cv.width = W * dpr; cv.height = 52 * dpr;
-  cv.style.width = W + 'px'; cv.style.height = '52px';
-  const ctx = cv.getContext('2d');
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, W, 52);
-  const bins = Math.floor(1400 * FFT_SIZE / SAMPLE_RATE);
-  const slice = W / bins;
-  for (let i = 0; i < bins; i++) {
-    const v = Math.max(0, (fData[i] + 140) / 140);
-    ctx.fillStyle = `rgba(76,175,80,${0.35 + 0.65 * v})`;
-    ctx.fillRect(i * slice, 52 - v * 48, Math.max(1, slice - 0.5), v * 48);
-  }
-}
-
-// ── TX/RX VISUALIZATION ─────────────────────────────────────────
-function drawWave(canvasId, data, color) {
-  const cv = document.getElementById(canvasId);
-  const W = cv.offsetWidth || 360;
-  const dpr = window.devicePixelRatio || 1;
-  cv.width = W * dpr; cv.height = 52 * dpr;
-  cv.style.width = W + 'px'; cv.style.height = '52px';
-  const ctx = cv.getContext('2d');
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, W, 52);
-  ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.beginPath();
-  data.forEach((v, i) => {
-    const x = (i / data.length) * W;
-    const y = (1 - v) * 26;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-}
-
-function updateTx() {
-  document.getElementById('errVal').textContent = document.getElementById('errRange').value + '%';
-  if (!txOpen) return;
-  renderTx(lastTimeBuf);
-}
-
-function renderTx(timeBuf) {
-  const err = parseInt(document.getElementById('errRange').value) / 100;
-  const bits = parseInt(document.getElementById('bitsSel').value);
-  const codec = document.getElementById('codecSel').value;
-  const n = Math.min(timeBuf.length, 300);
-  const orig = Array.from(timeBuf.slice(0, n));
-
-  // Cuantización
-  const levels = Math.pow(2, bits);
-  const quant = orig.map(v => Math.round(v * (levels / 2)) / (levels / 2));
-
-  // Factor de compresión por codec
-  const cf = { pcm: 1, adpcm: 0.25, mp3: 0.1 }[codec];
-
-  // Simulación de errores de canal (bit-flips)
-  const rx = quant.map(v => {
-    if (Math.random() < err) {
-      const noise = (Math.random() * 2 - 1) * (bits / 24) * 0.9;
-      return Math.max(-1, Math.min(1, v + noise));
-    }
-    return v;
-  });
-
-  // SNR
-  let sig = 0, nse = 0;
-  for (let i = 0; i < n; i++) { sig += quant[i] * quant[i]; nse += (rx[i] - quant[i]) ** 2; }
-  const snr = nse > 0 ? Math.round(10 * Math.log10(sig / nse)) : Infinity;
-  const bitrate = Math.round(SAMPLE_RATE * bits * cf / 1000);
-
-  document.getElementById('statBR').textContent = bitrate;
-  document.getElementById('statSNR').textContent = isFinite(snr) ? snr : '∞';
-
-  drawWave('txCanvas', quant, '#4caf50');
-  drawWave('rxCanvas', rx, err > 0.1 ? '#f44336' : '#64b5f6');
-}
-
-function toggleTx() {
-  txOpen = !txOpen;
-  document.getElementById('txBody').className = 'tx-body' + (txOpen ? ' open' : '');
-  document.getElementById('txTog').textContent = txOpen ? '▲ cerrar' : '▼ ver';
-  if (txOpen) renderTx(lastTimeBuf);
-}
-
-// ── MAIN LOOP ───────────────────────────────────────────────────
 function loop() {
   const tBuf = new Float32Array(FFT_SIZE);
-  const fFloat = new Float32Array(analyser.frequencyBinCount);
-
   function tick() {
     analyser.getFloatTimeDomainData(tBuf);
-    analyser.getFloatFrequencyData(fFloat);
-    lastTimeBuf = tBuf.slice();
-
     const freq = autoCorrelate(tBuf);
-    const target = STRINGS[selIdx];
-
-    if (freq > 60 && freq < 1400) {
-      const cents = centsOff(freq, target.freq);
-      const note = noteFromFreq(freq);
-      const deg = Math.max(-50, Math.min(50, cents * 0.9));
-
+    if (freq > 60 && freq < 600) {
+      const cents = 1200 * Math.log2(freq / STRINGS[selIdx].freq);
+      const deg = Math.max(-50, Math.min(50, cents));
       document.getElementById('needle').style.transform = `translateX(-50%) rotate(${deg}deg)`;
-      document.getElementById('noteBig').textContent = note.replace(/\d/, '');
-      document.getElementById('noteTarget').textContent = target.name;
+      document.getElementById('noteBig').textContent = STRINGS[selIdx].name;
       document.getElementById('freqTxt').textContent = freq.toFixed(1) + ' Hz';
-
-      const st = document.getElementById('statusTxt');
-      if (Math.abs(cents) < 5)      { st.textContent = 'Afinada ✓';         st.style.color = '#4caf50'; }
-      else if (cents > 0)            { st.textContent = 'Demasiado alto';     st.style.color = '#ffc107'; }
-      else                           { st.textContent = 'Demasiado bajo';     st.style.color = '#2196f3'; }
-    } else {
-      document.getElementById('needle').style.transform = 'translateX(-50%) rotate(0deg)';
-      document.getElementById('noteBig').textContent = '—';
-      document.getElementById('noteTarget').textContent = '—';
-      document.getElementById('freqTxt').textContent = '— Hz';
-      const st = document.getElementById('statusTxt');
-      st.textContent = 'Esperando señal...';
-      st.style.color = 'var(--muted)';
+      document.getElementById('statusTxt').textContent = Math.abs(cents) < 10 ? 'Afinada' : (cents > 0 ? 'Afloja' : 'Tensa');
     }
-
-    drawSpectrum(fFloat);
-    if (txOpen) renderTx(lastTimeBuf);
     rafId = requestAnimationFrame(tick);
   }
   tick();
 }
 
-// ── MIC CONTROL ─────────────────────────────────────────────────
 async function toggleMic() {
-  const btn = document.getElementById('micBtn');
-  if (micActive) {
-    micActive = false;
-    cancelAnimationFrame(rafId);
-    if (micStream) micStream.getTracks().forEach(t => t.stop());
-    if (audioCtx) audioCtx.close();
-    btn.className = 'btn-round btn-mic';
-    btn.textContent = '🎤';
-    document.getElementById('needle').style.transform = 'translateX(-50%) rotate(0deg)';
-    document.getElementById('noteBig').textContent = '—';
-    document.getElementById('noteTarget').textContent = '—';
-    document.getElementById('statusTxt').textContent = 'Presioná el micrófono';
-    document.getElementById('statusTxt').style.color = 'var(--muted)';
-    document.getElementById('freqTxt').textContent = '— Hz';
-    return;
-  }
-  try {
-    micStream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
-    });
-    audioCtx = new AudioContext({ sampleRate: SAMPLE_RATE });
-    analyser = audioCtx.createAnalyser();
-    analyser.fftSize = FFT_SIZE;
-    analyser.smoothingTimeConstant = 0.2;
-    gainNode = audioCtx.createGain();
-    gainNode.gain.value = muted ? 0 : 0;  // no playback, solo análisis
-    const src = audioCtx.createMediaStreamSource(micStream);
-    src.connect(analyser);
-    micActive = true;
-    btn.className = 'btn-round btn-mic on';
-    btn.textContent = '⏹';
-    loop();
-  } catch(e) {
-    alert('No se pudo acceder al micrófono.\n' + e.message);
-  }
+  if (micActive) { window.location.reload(); return; }
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  audioCtx = new AudioContext();
+  analyser = audioCtx.createAnalyser();
+  audioCtx.createMediaStreamSource(stream).connect(analyser);
+  micActive = true;
+  document.getElementById('micBtn').className = 'btn-round btn-mic on';
+  loop();
 }
 
-function toggleMute() {
-  muted = !muted;
-  const btn = document.getElementById('volBtn');
-  btn.textContent = muted ? '🔇' : '🔊';
-  btn.className = 'btn-round btn-vol' + (muted ? ' muted' : '');
-}
-
-// ── INIT ─────────────────────────────────────────────────────────
+function toggleTx() { txOpen = !txOpen; document.getElementById('txBody').className = txOpen ? 'tx-body open' : 'tx-body'; }
 buildStrings();
 </script>
 </body>
